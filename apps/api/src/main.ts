@@ -1,39 +1,38 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
+import * as helmet from 'helmet';
 import { AppModule } from './app.module';
 
-async function bootstrap() {
+async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
 
-  // Global pipes
+  // Security middleware
+  app.use(helmet());
+
+  // Enable CORS
+  app.enableCors({
+    origin: configService.get('CORS_ORIGIN', 'http://localhost:3000'),
+    credentials: true,
+  });
+
+  // Global validation pipe
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
       transform: true,
-    }),
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    })
   );
 
-  // CORS
-  app.enableCors({
-    origin: process.env.CORS_ORIGIN || ['http://localhost:3000'],
-    credentials: true,
+  const port = configService.get('PORT', 3001);
+  await app.listen(port, () => {
+    console.log(`🚀 API server running on http://localhost:${port}`);
   });
-
-  // Swagger
-  const config = new DocumentBuilder()
-    .setTitle('Atomic AI API')
-    .setDescription('Production-ready AI SaaS API')
-    .setVersion('1.0.0')
-    .addBearerAuth()
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
-
-  const port = process.env.PORT || 3001;
-  await app.listen(port);
-  console.log(`API running on http://localhost:${port}`);
 }
 
 bootstrap();

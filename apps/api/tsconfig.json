@@ -1,28 +1,37 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "target": "ES2020",
     "module": "commonjs",
-    "target": "ES2021",
-    "lib": ["ES2021"],
+    "lib": ["ES2020"],
     "outDir": "./dist",
     "rootDir": "./src",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
+      "src/*": ["src/*"],
       "@atomic-ai/types": ["../../packages/types/src/index.ts"],
       "@atomic-ai/types/*": ["../../packages/types/src/*"],
       "@atomic-ai/utils": ["../../packages/utils/src/index.ts"],
       "@atomic-ai/utils/*": ["../../packages/utils/src/*"]
-    }
+    },
+    "strict": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+  "exclude": ["node_modules", "dist", "test"]
 }

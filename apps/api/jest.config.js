@@ -1,15 +1,21 @@
-const config = {
-  moduleFileExtensions: ['js', 'json', 'ts'],
-  rootDir: 'src',
-  testRegex: '.*\\.spec\\.ts$',
-  transform: {
-    '^.+\\.(t|j)s$': 'ts-jest',
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": "src",
+  "testRegex": ".*\\.spec\\.ts$",
+  "transform": {
+    "^.+\\.(t|j)s$": "ts-jest"
   },
-  collectCoverageFrom: [
-    '**/*.(t|j)s',
+  "collectCoverageFrom": [
+    "**/*.(t|j)s"
   ],
-  coverageDirectory: '../coverage',
-  testEnvironment: 'node',
-};
-
-module.exports = config;
+  "coverageDirectory": "../coverage",
+  "testEnvironment": "node",
+  "roots": [
+    "<rootDir>",
+    "<rootDir>/../"
+  ],
+  "moduleNameMapper": {
+    "^src/(.*)$": "<rootDir>/src/$1",
+    "^@atomic-ai/(.*)$": "<rootDir>/../../packages/$1/src"
+  }
+}
