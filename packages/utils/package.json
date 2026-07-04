@@ -1,0 +1,21 @@
+{
+  "name": "@atomic-ai/utils",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Shared utility functions",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "files": ["src"],
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix"
+  },
+  "dependencies": {
+    "axios": "^1.7.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.8",
+    "typescript": "^5.5.4"
+  }
+}
