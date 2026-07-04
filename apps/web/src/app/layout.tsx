@@ -1,16 +1,23 @@
 import type { Metadata } from 'next';
-import { ReactNode } from 'react';
-import '../styles/globals.css';
+import React from 'react';
+import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Atomic AI - AI SaaS Platform',
-  description: 'Production-ready AI SaaS platform built with Next.js and NestJS',
+  title: 'Atomic AI',
+  description: 'Production-ready AI SaaS platform',
+  viewport: 'width=device-width, initial-scale=1',
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body>
+        <main>{children}</main>
+      </body>
     </html>
   );
 }
