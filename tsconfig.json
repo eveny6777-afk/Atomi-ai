@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "allowJs": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@atomic-ai/ui": ["packages/ui/src/index.ts"],
+      "@atomic-ai/ui/*": ["packages/ui/src/*"],
+      "@atomic-ai/types": ["packages/types/src/index.ts"],
+      "@atomic-ai/types/*": ["packages/types/src/*"],
+      "@atomic-ai/utils": ["packages/utils/src/index.ts"],
+      "@atomic-ai/utils/*": ["packages/utils/src/*"]
+    }
+  },
+  "exclude": ["node_modules"]
+}

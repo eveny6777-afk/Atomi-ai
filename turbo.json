@@ -1,0 +1,68 @@
+{
+  "$schema": "https://turbo.build/json/schema.json",
+  "globalEnv": [
+    "NODE_ENV",
+    "CI"
+  ],
+  "globalPassThroughEnv": [
+    "DATABASE_URL",
+    "DIRECT_URL",
+    "NEXT_PUBLIC_API_URL"
+  ],
+  "tasks": {
+    "build": {
+      "outputs": [
+        ".next/**",
+        "dist/**",
+        ".turbo/cache"
+      ],
+      "cache": true,
+      "dependsOn": [
+        "^build",
+        "^type-check"
+      ]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "test": {
+      "outputs": [
+        "coverage/**"
+      ],
+      "cache": true,
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "lint": {
+      "outputs": [],
+      "cache": true,
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "lint:fix": {
+      "outputs": [],
+      "cache": false,
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "type-check": {
+      "outputs": [],
+      "cache": true
+    },
+    "db:push": {
+      "outputs": [],
+      "cache": false
+    },
+    "db:studio": {
+      "outputs": [],
+      "cache": false
+    },
+    "clean": {
+      "cache": false
+    }
+  }
+}
