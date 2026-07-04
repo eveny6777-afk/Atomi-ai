@@ -17,14 +17,9 @@
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@atomic-ai/types": ["../../packages/types/src/index.ts"],
-      "@atomic-ai/types/*": ["../../packages/types/src/*"],
-      "@atomic-ai/ui": ["../../packages/ui/src/index.ts"],
-      "@atomic-ai/ui/*": ["../../packages/ui/src/*"],
-      "@atomic-ai/utils": ["../../packages/utils/src/index.ts"],
-      "@atomic-ai/utils/*": ["../../packages/utils/src/*"]
-    }
+      "@/*": ["./src/*"]
+    },
+    "typeRoots": ["./node_modules/@types", "../../node_modules/@types"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", ".next", "dist"]

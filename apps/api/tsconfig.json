@@ -8,11 +8,7 @@
     "rootDir": "./src",
     "baseUrl": ".",
     "paths": {
-      "src/*": ["src/*"],
-      "@atomic-ai/types": ["../../packages/types/src/index.ts"],
-      "@atomic-ai/types/*": ["../../packages/types/src/*"],
-      "@atomic-ai/utils": ["../../packages/utils/src/index.ts"],
-      "@atomic-ai/utils/*": ["../../packages/utils/src/*"]
+      "src/*": ["src/*"]
     },
     "strict": true,
     "resolveJsonModule": true,
@@ -30,7 +26,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "typeRoots": ["./node_modules/@types", "../../node_modules/@types"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "test"]

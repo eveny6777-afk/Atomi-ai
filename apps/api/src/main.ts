@@ -1,9 +1,10 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe, HttpExceptionFilter } from '@nestjs/common';
+import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule);
@@ -36,9 +37,6 @@ async function bootstrap(): Promise<void> {
 
   // Global exception filter
   app.useGlobalFilters(new HttpExceptionFilter());
-
-  // Set API prefix
-  app.setGlobal('prefix', 'api');
 
   const port = configService.get('PORT', 3001);
   const nodeEnv = configService.get('NODE_ENV', 'development');
