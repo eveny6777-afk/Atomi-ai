@@ -13,26 +13,56 @@ datasource db {
 
 // User model
 model User {
-  id        String     @id @default(cuid())
-  email     String     @unique
-  name      String
-  password  String     // Will be hashed before storage
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id            String         @id @default(cuid())
+  email         String         @unique
+  name          String
+  password      String         // bcrypt hashed
+  isActive      Boolean        @default(true)
+  emailVerified Boolean        @default(false)
+  lastLogin     DateTime?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  refreshTokens RefreshToken[]
+  sessions      Session[]
 
   @@index([email])
+  @@index([isActive])
   @@map("users")
 }
 
-// Example model for future features
-model Session {
+// Refresh token model for token rotation
+model RefreshToken {
   id        String   @id @default(cuid())
   userId    String
   token     String   @unique
   expiresAt DateTime
+  revokedAt DateTime?
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([token])
+  @@map("refresh_tokens")
+}
+
+// Session model for tracking user sessions
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  userAgent    String?
+  ipAddress    String?
+  lastActivity DateTime @default(now())
+  expiresAt    DateTime
+  revokedAt    DateTime?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
   @@map("sessions")
 }
