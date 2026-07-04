@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
-import React from 'react';
+import { AuthProvider } from '@/providers/auth-provider';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Atomic AI',
+  title: 'Atomic AI - Production AI SaaS Platform',
   description: 'Production-ready AI SaaS platform',
   viewport: 'width=device-width, initial-scale=1',
 };
@@ -16,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <main>{children}</main>
+        <AuthProvider>
+          <main>{children}</main>
+        </AuthProvider>
       </body>
     </html>
   );

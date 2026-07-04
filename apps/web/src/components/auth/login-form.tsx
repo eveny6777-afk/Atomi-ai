@@ -1,0 +1,86 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/providers/auth-provider';
+import { Button } from '@atomic-ai/ui';
+import { Input } from '@atomic-ai/ui';
+import Link from 'next/link';
+
+export function LoginForm() {
+  const router = useRouter();
+  const { login, isLoading } = useAuth();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setIsSubmitting(true);
+
+    try {
+      await login(email, password);
+      router.push('/dashboard');
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Login failed';
+      setError(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="w-full max-w-md">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <h2 className="mb-2 text-2xl font-bold text-white">Welcome Back</h2>
+          <p className="text-sm text-gray-400">Sign in to your Atomic AI account</p>
+        </div>
+
+        {error && (
+          <div className="rounded-lg bg-red-900 bg-opacity-30 p-4 text-sm text-red-400 border border-red-700">
+            {error}
+          </div>
+        )}
+
+        <Input
+          type="email"
+          placeholder="Email address"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          disabled={isSubmitting || isLoading}
+          className="bg-gray-800 text-white placeholder:text-gray-500 border-gray-700"
+          required
+        />
+
+        <Input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          disabled={isSubmitting || isLoading}
+          className="bg-gray-800 text-white placeholder:text-gray-500 border-gray-700"
+          required
+        />
+
+        <Button
+          type="submit"
+          className="w-full"
+          disabled={isSubmitting || isLoading}
+          isLoading={isSubmitting}
+        >
+          Sign In
+        </Button>
+
+        <div className="text-center text-sm text-gray-400">
+          Don't have an account?{' '}
+          <Link href="/register" className="font-medium text-blue-400 hover:text-blue-300">
+            Create one
+          </Link>
+        </div>
+      </form>
+    </div>
+  );
+}

@@ -12,5 +12,14 @@
 }
 
 body {
-  @apply bg-white text-gray-900 antialiased;
+  @apply bg-gray-900 text-white antialiased;
+}
+
+html {
+  color-scheme: dark;
+}
+
+/* Dark theme by default */
+:root {
+  color-scheme: dark;
 }
