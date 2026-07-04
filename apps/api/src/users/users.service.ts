@@ -1,6 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from '@prisma/client';
+import { UpdateProfileDto } from './dto/update-profile.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class UsersService {
@@ -42,13 +45,28 @@ export class UsersService {
       },
     });
 
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
     return user;
   }
 
   /**
    * Update user profile
    */
-  async updateProfile(id: string, data: { name?: string; email?: string }) {
+  async updateProfile(id: string, data: UpdateProfileDto) {
+    // Check if email is already taken
+    if (data.email) {
+      const existingUser = await this.prismaService.user.findUnique({
+        where: { email: data.email },
+      });
+
+      if (existingUser && existingUser.id !== id) {
+        throw new BadRequestException('Email already in use');
+      }
+    }
+
     return this.prismaService.user.update({
       where: { id },
       data,
@@ -63,6 +81,40 @@ export class UsersService {
         updatedAt: true,
       },
     });
+  }
+
+  /**
+   * Change user password
+   */
+  async changePassword(id: string, changePasswordDto: ChangePasswordDto) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Verify current password
+    const isPasswordValid = await bcrypt.compare(
+      changePasswordDto.currentPassword,
+      user.password
+    );
+
+    if (!isPasswordValid) {
+      throw new BadRequestException('Current password is incorrect');
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(changePasswordDto.newPassword, 10);
+
+    // Update password
+    await this.prismaService.user.update({
+      where: { id },
+      data: { password: hashedPassword },
+    });
+
+    return { message: 'Password changed successfully' };
   }
 
   /**
