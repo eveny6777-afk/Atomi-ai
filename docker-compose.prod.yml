@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: atomic-ai-db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: atomic_ai
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U user']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - atomic-ai-network
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: atomic-ai-api
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DATABASE_URL: postgresql://user:password@postgres:5432/atomic_ai?schema=public
+      DIRECT_URL: postgresql://user:password@postgres:5432/atomic_ai?schema=public
+      CORS_ORIGIN: http://localhost:3000
+    ports:
+      - '3001:3001'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - atomic-ai-network
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: atomic-ai-web
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+    ports:
+      - '3000:3000'
+    depends_on:
+      - api
+    networks:
+      - atomic-ai-network
+
+volumes:
+  postgres_data:
+
+networks:
+  atomic-ai-network:
+    driver: bridge
