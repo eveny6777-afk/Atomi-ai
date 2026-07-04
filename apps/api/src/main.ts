@@ -1,7 +1,8 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, HttpExceptionFilter } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as helmet from 'helmet';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 
 async function bootstrap(): Promise<void> {
@@ -10,11 +11,15 @@ async function bootstrap(): Promise<void> {
 
   // Security middleware
   app.use(helmet());
+  app.use(cookieParser());
 
   // Enable CORS
+  const corsOrigin = configService.get('CORS_ORIGIN', 'http://localhost:3000');
   app.enableCors({
-    origin: configService.get('CORS_ORIGIN', 'http://localhost:3000'),
+    origin: corsOrigin,
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
   // Global validation pipe
@@ -29,9 +34,17 @@ async function bootstrap(): Promise<void> {
     })
   );
 
+  // Global exception filter
+  app.useGlobalFilters(new HttpExceptionFilter());
+
+  // Set API prefix
+  app.setGlobal('prefix', 'api');
+
   const port = configService.get('PORT', 3001);
+  const nodeEnv = configService.get('NODE_ENV', 'development');
   await app.listen(port, () => {
     console.log(`🚀 API server running on http://localhost:${port}`);
+    console.log(`📝 Environment: ${nodeEnv}`);
   });
 }
 
